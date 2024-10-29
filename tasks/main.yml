@@ -1,0 +1,62 @@
+---
+- name: Ensure tuned is installed
+  ansible.builtin.apt:
+    name:
+      - tuned
+    state: present
+    update_cache: true
+    cache_valid_time: "{{ apt_cache_valid_time }}"
+
+- name: Ensure tuned.service is enabled and started
+  ansible.builtin.systemd:
+    name: tuned.service
+    state: started
+    enabled: true
+    daemon_reload: true
+
+- name: Get the configured tuned profile
+  ansible.builtin.shell:
+    executable: /bin/bash
+    cmd: |
+      set -o pipefail
+      tuned-adm active | awk '{print $NF}'
+  register: tuned_adm_active_profile
+  changed_when: false
+
+- name: Get the recommended tuned profile
+  ansible.builtin.shell:
+    executable: /bin/bash
+    cmd: |
+      tuned-adm recommend
+  register: tuned_adm_recommended_profile
+  changed_when: false
+
+- name: Set up tuned to use the configured profile
+  ansible.builtin.shell:
+    executable: /bin/bash
+    cmd: |
+      set -o pipefail
+      tuned-adm profile {{ tuned_profile }}
+      tuned-adm active | awk '{print $NF}'
+  when: tuned_profile is defined and tuned_profile != tuned_adm_active_profile.stdout
+  register: tuned_configured_profile
+  changed_when: tuned_configured_profile.stdout != tuned_adm_active_profile.stdout
+
+- name: Set up tuned to use the recommended profile
+  ansible.builtin.shell:
+    executable: /bin/bash
+    cmd: |
+      set -o pipefail
+      tuned-adm profile $(tuned-adm recommend)
+      tuned-adm active | awk '{print $NF}'
+  when: tuned_profile is undefined and tuned_adm_active_profile.stdout != tuned_adm_recommended_profile.stdout
+  register: tuned_recommended_profile
+  changed_when: tuned_recommended_profile.stdout != tuned_adm_active_profile.stdout
+
+- name: Verify tuned profile
+  ansible.builtin.command:
+    cmd: |
+      tuned-adm verify
+  register: tuned_verify
+  failed_when: '"current system settings match the preset profile" not in tuned_verify.stdout'
+  changed_when: tuned_verify.rc != 0
