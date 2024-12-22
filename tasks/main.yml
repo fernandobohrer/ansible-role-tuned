@@ -54,7 +54,8 @@
   changed_when: tuned_recommended_profile.stdout != tuned_adm_active_profile.stdout
 
 - name: Verify tuned profile
-  ansible.builtin.command:
+  ansible.builtin.shell:
+    executable: /bin/bash
     cmd: |
       tuned-adm verify
   register: tuned_verify
