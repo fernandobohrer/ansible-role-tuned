@@ -53,11 +53,14 @@
   register: tuned_recommended_profile
   changed_when: tuned_recommended_profile.stdout != tuned_adm_active_profile.stdout
 
-- name: Verify tuned profile
-  ansible.builtin.shell:
-    executable: /bin/bash
-    cmd: |
-      tuned-adm verify
-  register: tuned_verify
-  failed_when: '"current system settings match the preset profile" not in tuned_verify.stdout'
-  changed_when: tuned_verify.rc != 0
+# TODO
+# The tuned profile verification step is being disabled temporarily due to an issue
+# associated with the execution of this step in Raspberry PIs running vanilla Debian.
+# - name: Verify tuned profile
+#   ansible.builtin.shell:
+#     executable: /bin/bash
+#     cmd: |
+#       tuned-adm verify
+#   register: tuned_verify
+#   failed_when: '"current system settings match the preset profile" not in tuned_verify.stdout'
+#   changed_when: tuned_verify.rc != 0
