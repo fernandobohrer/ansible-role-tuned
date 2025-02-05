@@ -1,1 +1,3 @@
 ---
+__tuned__role_dependencies:
+  - tuned

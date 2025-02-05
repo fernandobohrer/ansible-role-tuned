@@ -1,15 +1,16 @@
 ---
+# Update the apt cache if it is older than the apt_cache_valid_time value.
+# Option set in seconds.
 apt_cache_valid_time: 3600
 
-# tuned_profile: throughput-performance
+# tuned__profile: throughput-performance
 #
-# Optional 'tuned_profile' variable. Only required if you want to manually set
-# the tuned profile. The above translates to running the command below on the
-# target Linux boxes: tuned-adm profile throughput-performance
+# Optional tuned__profile variable. Only required if you want to manually set the tuned
+# profile. The above translates to running the command below on the target Linux boxes:
+# tuned-adm profile throughput-performance
 #
-# To get a list of the available profiles, after installing tuned, you can run:
-# tuned-adm list
+# To get a list of the available profiles, you can run: tuned-adm list
 #
-# When the optional tuned_profile variable is not set, tuned figures out the
-# recommended profile and applies it to the system using the command below:
+# When the optional tuned__profile variable is not set, tuned figures out the
+# recommended profile itself and applies it to the system using the command below:
 # tuned-adm profile $(tuned-adm recommend)
