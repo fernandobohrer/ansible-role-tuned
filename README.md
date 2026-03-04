@@ -6,7 +6,7 @@ An Ansible role that deploys and configures [tuned][01] on Linux boxes.
 
 From tuned's [site][01]:
 
-*TuneD is a system tuning service for Linux.* It *tunes system settings according to a selected profile* and *supports various types of configuration like `sysctl`, `sysfs`, or kernel boot command line parameters, which are integrated in a plug-in architecture*.
+_TuneD is a system tuning service for Linux._ It _tunes system settings according to a selected profile_ and _supports various types of configuration like `sysctl`, `sysfs`, or kernel boot command line parameters, which are integrated in a plug-in architecture_.
 
 This role deploys and configures [tuned][01] on Linux boxes.
 
